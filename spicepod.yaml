@@ -3,20 +3,13 @@ kind: Spicepod
 name: f5-nginx
 
 datasets:
-# TODO: host somewhere
- # - from: file://Users/jeadie/Github/spiceai/nginx_cve.csv
- #   name: local_cve
- #   embeddings:
- #     - column: description
- #       use: hf_minilm
-
- - from:  s3://spiceai-demo-datasets/nginx
+ - from: s3://spiceai-demo-datasets/nginx/nginx_cve.csv
    name: nginx_cve
-   params:
-     file_format: json
    embeddings:
      - column: description
        use: hf_minilm
+   acceleration:
+     enabled: true  
 
  - from: s3://spiceai-demo-datasets/nginx/tickets/
    name: nginx_tickets
@@ -24,55 +17,56 @@ datasets:
      enabled: true
    params:
      file_format: csv
-     csv_schema_infer_max_records: 10
+     csv_schema_infer_max_records: 1
    embeddings:
      - column: description
        use: hf_minilm
 
- # - from: graphql:https://api.github.com/graphql
- #   name: nginx_commits
- #   embeddings:
- #     - column: description
- #       use: hf_minilm
- #   acceleration:
- #     enabled: true
- #   params:
- #     unnest_depth: 1
- #     graphql_auth_token: ${ secrets:GITHUB_TOKEN }
- #     json_pointer: /data/repository/defaultBranchRef/target/history/nodes
- #     graphql_query: |
- #        {
- #          repository(owner: "nginx", name: "nginx") {
- #            defaultBranchRef {
- #              target {
- #                ... on Commit {
- #                  history(first: 100, after: $cursor) {
- #                    pageInfo {
- #                      hasNextPage
- #                      endCursor
- #                    }
- #                    nodes {
- #                      message
- #                      messageHeadline
- #                      messageBody
- #                      oid
- #                      additions
- #                      deletions
- #                      id
- #                      committedDate
- #                      committerName: committer {
- #                        name
- #                      }
- #                      committerEmail: committer {
- #                        email
- #                      }
- #                    }
- #                  }
- #                }
- #              }
- #            }
- #          }
- #        }
+ - from: graphql:https://api.github.com/graphql
+   name: nginx_commits
+   embeddings:
+     - column: message
+       use: hf_minilm
+   acceleration:
+     enabled: true
+   params:
+     unnest_depth: 1
+     graphql_auth_token: ${env:GITHUB_TOKEN}
+     json_pointer: /data/repository/defaultBranchRef/target/history/nodes
+     #, after: $cursor) { 
+     graphql_query: |
+        {
+          repository(owner: "nginx", name: "nginx") {
+            defaultBranchRef {
+              target {
+                ... on Commit {
+                  history(first: 100) { 
+                    pageInfo {
+                      hasNextPage
+                      endCursor
+                    }
+                    nodes {
+                      message
+                      messageHeadline
+                      messageBody
+                      oid
+                      additions
+                      deletions
+                      id
+                      committedDate
+                      committerName: committer {
+                        name
+                      }
+                      committerEmail: committer {
+                        email
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
 
 embeddings:
   - name: hf_minilm

@@ -29,50 +29,50 @@ datasets:
      - column: description
        use: hf_minilm
 
- - from: graphql:https://api.github.com/graphql
-   name: nginx_commits
-   embeddings:
-     - column: description
-       use: hf_minilm
-   acceleration:
-     enabled: true
-   params:
-     unnest_depth: 1
-     graphql_auth_token: ${ secrets:GITHUB_TOKEN }
-     json_pointer: /data/repository/defaultBranchRef/target/history/nodes
-     graphql_query: |
-        {
-          repository(owner: "nginx", name: "nginx") {
-            defaultBranchRef {
-              target {
-                ... on Commit {
-                  history(first: 100, after: $cursor) {
-                    pageInfo {
-                      hasNextPage
-                      endCursor
-                    }
-                    nodes {
-                      message
-                      messageHeadline
-                      messageBody
-                      oid
-                      additions
-                      deletions
-                      id
-                      committedDate
-                      committerName: committer {
-                        name
-                      }
-                      committerEmail: committer {
-                        email
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+ # - from: graphql:https://api.github.com/graphql
+ #   name: nginx_commits
+ #   embeddings:
+ #     - column: description
+ #       use: hf_minilm
+ #   acceleration:
+ #     enabled: true
+ #   params:
+ #     unnest_depth: 1
+ #     graphql_auth_token: ${ secrets:GITHUB_TOKEN }
+ #     json_pointer: /data/repository/defaultBranchRef/target/history/nodes
+ #     graphql_query: |
+ #        {
+ #          repository(owner: "nginx", name: "nginx") {
+ #            defaultBranchRef {
+ #              target {
+ #                ... on Commit {
+ #                  history(first: 100, after: $cursor) {
+ #                    pageInfo {
+ #                      hasNextPage
+ #                      endCursor
+ #                    }
+ #                    nodes {
+ #                      message
+ #                      messageHeadline
+ #                      messageBody
+ #                      oid
+ #                      additions
+ #                      deletions
+ #                      id
+ #                      committedDate
+ #                      committerName: committer {
+ #                        name
+ #                      }
+ #                      committerEmail: committer {
+ #                        email
+ #                      }
+ #                    }
+ #                  }
+ #                }
+ #              }
+ #            }
+ #          }
+ #        }
 
 embeddings:
   - name: hf_minilm

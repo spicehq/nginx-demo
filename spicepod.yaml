@@ -7,11 +7,11 @@ datasets:
    name: nginx_cve
    embeddings:
      - column: description
-       use: hf_minilm
+       use: oai
    acceleration:
      enabled: true  
 
- - from: s3://spiceai-demo-datasets/nginx/tickets/
+ - from: s3://spiceai-demo-datasets/nginx/tickets/sample/
    name: nginx_tickets
    acceleration:
      enabled: true
@@ -20,7 +20,19 @@ datasets:
      csv_schema_infer_max_records: 1
    embeddings:
      - column: description
-       use: hf_minilm
+       use: oai
+
+  - from: s3://spiceai-demo-datasets/nginx/nginx/docs/
+    name: nginx_docs
+      embeddings:
+        - column: content
+          use: hf_minilm
+          column_pk:
+            - location
+    acceleration:
+      enabled: true
+    params:
+      file_format: md
 
  - from: graphql:https://api.github.com/graphql
    name: nginx_commits
@@ -29,6 +41,13 @@ datasets:
        use: hf_minilm
    acceleration:
      enabled: true
+     params:
+        pg_host: aws-0-us-west-1.pooler.supabase.com
+        pg_db: postgres
+        pg_port: 5432
+        pg_user: 'postgres.tjtwkekeblroqgenheef'
+        pg_sslmode: require
+        pg_pass: ${ env:POSTGRES_PASSWORD }
    params:
      unnest_depth: 1
      graphql_auth_token: ${env:GITHUB_TOKEN}
@@ -69,6 +88,11 @@ datasets:
         }
 
 embeddings:
+  - name: oai
+    from: openai
+    params:
+      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
+
   - name: hf_minilm
     from: huggingface:huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 

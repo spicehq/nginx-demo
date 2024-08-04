@@ -22,17 +22,17 @@ datasets:
      - column: description
        use: oai
 
-  - from: s3://spiceai-demo-datasets/nginx/nginx/docs/
-    name: nginx_docs
-      embeddings:
-        - column: content
-          use: hf_minilm
-          column_pk:
-            - location
-    acceleration:
-      enabled: true
-    params:
-      file_format: md
+ - from: s3://spiceai-demo-datasets/nginx/docs/
+   name: nginx_docs
+   embeddings:
+     - column: content
+       use: hf_minilm
+       column_pk:
+         - location
+   acceleration:
+     enabled: true
+   params:
+     file_format: md
 
  - from: graphql:https://api.github.com/graphql
    name: nginx_commits
@@ -41,6 +41,7 @@ datasets:
        use: hf_minilm
    acceleration:
      enabled: true
+     engine: postgres
      params:
         pg_host: aws-0-us-west-1.pooler.supabase.com
         pg_db: postgres

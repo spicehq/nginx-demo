@@ -9,7 +9,7 @@ datasets:
      - column: description
        use: oai
    acceleration:
-     enabled: true  
+     enabled: true
 
  - from: s3://spiceai-demo-datasets/nginx/tickets/sample/
    name: nginx_tickets
@@ -43,24 +43,32 @@ datasets:
      enabled: true
      engine: postgres
      params:
-        pg_host: aws-0-us-west-1.pooler.supabase.com
-        pg_db: postgres
-        pg_port: 5432
-        pg_user: 'postgres.tjtwkekeblroqgenheef'
-        pg_sslmode: require
-        pg_pass: ${ env:POSTGRES_PASSWORD }
+      # neon db
+      host: ep-silent-sun-a4ma5q8t.us-east-1.aws.neon.tech
+      pg_db: spice-demo-db
+      pg_port: 5432
+      pg_user: spice-demo-db_owner
+      pg_sslmode: require
+      pg_pass: ${ env:NEON_POSTGRES_PASSWORD }
+      # supabase
+      # pg_host: aws-0-us-west-1.pooler.supabase.com
+      # pg_db: postgres
+      # pg_port: 5432
+      # pg_user: 'postgres.tjtwkekeblroqgenheef'
+      # pg_sslmode: require
+      # pg_pass: ${ env:POSTGRES_PASSWORD }
    params:
      unnest_depth: 1
      graphql_auth_token: ${env:GITHUB_TOKEN}
      json_pointer: /data/repository/defaultBranchRef/target/history/nodes
-     #, after: $cursor) { 
+     #, after: $cursor) {
      graphql_query: |
         {
           repository(owner: "nginx", name: "nginx") {
             defaultBranchRef {
               target {
                 ... on Commit {
-                  history(first: 100) { 
+                  history(first: 100) {
                     pageInfo {
                       hasNextPage
                       endCursor

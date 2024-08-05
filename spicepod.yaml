@@ -41,14 +41,6 @@ datasets:
        use: hf_minilm
    acceleration:
      enabled: true
-     engine: postgres
-     params:
-        pg_host: aws-0-us-west-1.pooler.supabase.com
-        pg_db: postgres
-        pg_port: 5432
-        pg_user: 'postgres.tjtwkekeblroqgenheef'
-        pg_sslmode: require
-        pg_pass: ${ env:POSTGRES_PASSWORD }
    params:
      unnest_depth: 1
      graphql_auth_token: ${env:GITHUB_TOKEN}

@@ -93,8 +93,14 @@ models:
   - name: openai
     from: openai/gpt-4o
     params:
-      spice_tools: auto
+      spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
+
+  - name: openai-all-tools
+    from: openai/gpt-4o
+    params:
+      spice_tools: auto
+      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }      
 
   - name: openai-search
     from: openai/gpt-4o

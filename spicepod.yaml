@@ -93,6 +93,25 @@ models:
   - name: openai
     from: openai/gpt-4o
     params:
+      spice_tools: disabled
+      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
+
+  - name: openai-all-tools
+    from: openai/gpt-4o
+    params:
+      spice_tools: auto
+      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }      
+
+  - name: openai-search
+    from: openai/gpt-4o
+    params:
+      spice_tools: document_similarity, list_datasets
+      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
+
+  - name: openai-sql
+    from: openai/gpt-4o
+    params:
+      spice_tools: sql, list_tables, table_schema
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
   - name: groq

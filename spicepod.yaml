@@ -100,19 +100,19 @@ models:
       spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
-  - name: openai-all-tools
+  - name: openai-with-spice
     from: openai/gpt-4o
     params:
       spice_tools: auto
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }      
 
-  - name: openai-search
+  - name: openai-with-spice-search
     from: openai/gpt-4o
     params:
       spice_tools: document_similarity, list_datasets
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
-  - name: openai-sql
+  - name: openai-with-spice-sql
     from: openai/gpt-4o
     params:
       spice_tools: sql, list_tables, table_schema

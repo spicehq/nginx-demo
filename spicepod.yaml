@@ -9,6 +9,8 @@ datasets:
    embeddings:
      - column: description
        use: oai
+       column_pk:
+        - cveId
    acceleration:
      enabled: true  
 
@@ -23,6 +25,8 @@ datasets:
    embeddings:
      - column: description
        use: oai
+       column_pk:
+        - id
 
  - from: s3://spiceai-demo-datasets/nginx/docs/
    name: nginx.docs
@@ -43,6 +47,8 @@ datasets:
    embeddings:
      - column: message
        use: hf_minilm
+       column_pk:
+        - oid
    acceleration:
      enabled: true
    params:

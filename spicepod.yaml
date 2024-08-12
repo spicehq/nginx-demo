@@ -2,6 +2,11 @@ version: v1beta1
 kind: Spicepod
 name: f5-nginx
 
+runtime:
+  tracing:
+    zipkin_enabled: true
+    zipkin_endpoint: http://zipkin.zipkin:9411/api/v2/spans
+
 datasets:
  - from: s3://spiceai-demo-datasets/nginx/nginx_cve.csv
    name: nginx.cve
@@ -12,7 +17,7 @@ datasets:
        column_pk:
         - cveId
    acceleration:
-     enabled: true  
+     enabled: true
 
  - from: s3://spiceai-demo-datasets/nginx/tickets/sample/
    name: nginx.tickets

@@ -14,7 +14,7 @@ datasets:
 
  - from: s3://spiceai-demo-datasets/nginx/tickets/sample/
    name: nginx.tickets
-   description: Work tickets of the Nginx project.
+   description: Tracked issues for the Nginx project. Tickets supported from https://trac.nginx.org/nginx/ticket/<id>.
    acceleration:
      enabled: true
    params:
@@ -39,7 +39,7 @@ datasets:
 
  - from: graphql:https://api.github.com/graphql
    name: nginx.commits
-   description: Git commits from the Nginx project. https://github.com/nginx/nginx/commits/master.
+   description: Git commits from the Nginx project. Oids are from https://github.com/nginx/nginx/commit/<oid>.
    embeddings:
      - column: message
        use: hf_minilm

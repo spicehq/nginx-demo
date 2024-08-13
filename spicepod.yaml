@@ -12,8 +12,9 @@ datasets:
     name: nginx.cve
     description: Security advisories and Common Vulnerabilities and Exposures (CVEs) for the Nginx project. https://nginx.org/en/security_advisories.html.
     params:
-      databricks_endpoint: ${env:DATABRICKS_ENDPOINT}
-      databricks_cluster_id: ${env:DATABRICKS_CLUSTER_ID}
+      databricks_token: ${secrets:DATABRICKS_TOKEN}
+      databricks_endpoint: ${secrets:DATABRICKS_ENDPOINT}
+      databricks_cluster_id: ${secrets:DATABRICKS_CLUSTER_ID}
     metadata:
       instructions: Always provide reference links. Use the primary id as cveId, to generate reference links.
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>

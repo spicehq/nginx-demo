@@ -22,7 +22,7 @@ datasets:
     acceleration:
       enabled: true
 
-  - from: s3://spiceai-demo-datasets/nginx/tickets/sample/
+  - from: s3://spiceai-demo-datasets/nginx/tickets/
     name: nginx.tickets
     description: Tracked issues for the Nginx project. Tickets from https://trac.nginx.org/nginx/report.
     metadata:

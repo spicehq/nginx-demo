@@ -8,17 +8,17 @@ runtime:
     zipkin_endpoint: http://zipkin.zipkin:9411/api/v2/spans
 
 datasets:
-  - from: s3://spiceai-demo-datasets/nginx/nginx_cve.csv
+  - from: s3://spiceai-demo-datasets/nginx/cve_nginx.parquet
     name: nginx.cve
     description: Security advisories and Common Vulnerabilities and Exposures (CVEs) for the Nginx project. https://nginx.org/en/security_advisories.html.
     metadata:
-      instructions: always provide reference links. use primary id as cveId, to genereate reference link.
+      instructions: Always provide reference links. Use the primary id as cveId, to generate reference links.
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>
     embeddings:
-      - column: description
+      - column: cve_data
         use: oai
         column_pk:
-         - cveId
+          - cveId
     acceleration:
       enabled: true
 
@@ -26,7 +26,7 @@ datasets:
     name: nginx.tickets
     description: Tracked issues for the Nginx project. Tickets from https://trac.nginx.org/nginx/report.
     metadata:
-      instructions: always provide reference links. use primary id as ticket_id, to genereate reference link.
+      instructions: Always provide reference links. Use the primary id as ticket_id, to generate reference links.
       reference_url_template: https://trac.nginx.org/nginx/ticket/<ticket_id>
     acceleration:
       enabled: true
@@ -56,7 +56,7 @@ datasets:
     name: nginx.commits
     description: Git commits from the Nginx project.
     metadata:
-      instructions: always provide reference links. use primary id as ticket_id, to genereate reference link.
+      instructions: Always provide reference links. Use the primary id as ticket_id, to generate reference links.
       reference_url_template: https://github.com/nginx/nginx/commit/<oid>
     embeddings:
       - column: message

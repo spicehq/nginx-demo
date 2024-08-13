@@ -8,9 +8,12 @@ runtime:
     zipkin_endpoint: http://zipkin.zipkin:9411/api/v2/spans
 
 datasets:
-  - from: s3://spiceai-demo-datasets/nginx/cve_nginx.parquet
+  - from: databricks:f5_demo.default.cve_nginx
     name: nginx.cve
     description: Security advisories and Common Vulnerabilities and Exposures (CVEs) for the Nginx project. https://nginx.org/en/security_advisories.html.
+    params:
+      databricks_endpoint: ${env:DATABRICKS_ENDPOINT}
+      databricks_cluster_id: ${env:DATABRICKS_CLUSTER_ID}
     metadata:
       instructions: Always provide reference links. Use the primary id as cveId, to generate reference links.
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>

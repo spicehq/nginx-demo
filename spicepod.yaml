@@ -43,7 +43,7 @@ datasets:
         column_pk:
          - id
 
-  - from: s3://spiceai-demo-datasets/nginx/docs/
+  - from: ftp://ftp.spiceai.us/nginx/docs/
     name: nginx.docs
     description: Documentation of the Nginx project. https://nginx.org/en/docs/.
     embeddings:
@@ -55,6 +55,8 @@ datasets:
       enabled: true
     params:
       file_format: md
+      ftp_user: spiceai
+      ftp_pass: ${secrets:SPICE_FTP_PASS}
 
   - from: graphql:https://api.github.com/graphql
     name: nginx.commits

@@ -8,66 +8,66 @@ runtime:
     zipkin_endpoint: http://zipkin.zipkin:9411/api/v2/spans
 
 datasets:
- - from: s3://spiceai-demo-datasets/nginx/nginx_cve.csv
-   name: nginx.cve
-   description: Security advisories and Common Vulnerabilities and Exposures (CVEs) for the Nginx project. https://nginx.org/en/security_advisories.html.
-   embeddings:
-     - column: description
-       use: oai
-       column_pk:
-        - cveId
-   acceleration:
-     enabled: true
+  - from: s3://spiceai-demo-datasets/nginx/nginx_cve.csv
+    name: nginx.cve
+    description: Security advisories and Common Vulnerabilities and Exposures (CVEs) for the Nginx project. https://nginx.org/en/security_advisories.html.
+    embeddings:
+      - column: description
+        use: oai
+        column_pk:
+         - cveId
+    acceleration:
+      enabled: true
 
- - from: s3://spiceai-demo-datasets/nginx/tickets/sample/
-   name: nginx.tickets
-   description: Tracked issues for the Nginx project. Tickets supported from https://trac.nginx.org/nginx/ticket/<id>.
-   acceleration:
-     enabled: true
-   params:
-     file_format: csv
-     csv_schema_infer_max_records: 1
-   embeddings:
-     - column: description
-       use: oai
-       column_pk:
-        - id
+  - from: s3://spiceai-demo-datasets/nginx/tickets/sample/
+    name: nginx.tickets
+    description: Tracked issues for the Nginx project. Tickets supported from https://trac.nginx.org/nginx/ticket/<id>.
+    acceleration:
+      enabled: true
+    params:
+      file_format: csv
+      csv_schema_infer_max_records: 1
+    embeddings:
+      - column: description
+        use: oai
+        column_pk:
+         - id
 
- - from: s3://spiceai-demo-datasets/nginx/docs/
-   name: nginx.docs
-   description: Documentation of the Nginx project. https://nginx.org/en/docs/.
-   embeddings:
-     - column: content
-       use: hf_minilm
-       column_pk:
-         - location
-   acceleration:
-     enabled: true
-   params:
-     file_format: md
+  - from: s3://spiceai-demo-datasets/nginx/docs/
+    name: nginx.docs
+    description: Documentation of the Nginx project. https://nginx.org/en/docs/.
+    embeddings:
+      - column: content
+        use: hf_minilm
+        column_pk:
+          - location
+    acceleration:
+      enabled: true
+    params:
+      file_format: md
 
- - from: graphql:https://api.github.com/graphql
-   name: nginx.commits
-   description: Git commits from the Nginx project. Oids are from https://github.com/nginx/nginx/commit/<oid>.
-   embeddings:
-     - column: message
-       use: hf_minilm
-       column_pk:
-        - oid
-   acceleration:
-     enabled: true
-   params:
-     unnest_depth: 1
-     graphql_auth_token: ${env:GITHUB_TOKEN}
-     json_pointer: /data/repository/defaultBranchRef/target/history/nodes
-     #, after: $cursor) { 
-     graphql_query: |
+  - from: graphql:https://api.github.com/graphql
+    name: nginx.commits
+    description: Git commits from the Nginx project. Oids are from https://github.com/nginx/nginx/commit/<oid>.
+    embeddings:
+      - column: message
+        use: hf_minilm
+        column_pk:
+         - oid
+    acceleration:
+      enabled: true
+    params:
+      unnest_depth: 1
+      graphql_auth_token: ${env:GITHUB_TOKEN}
+      json_pointer: /data/repository/defaultBranchRef/target/history/nodes
+      #, after: $cursor) {
+      graphql_query: |
         {
           repository(owner: "nginx", name: "nginx") {
             defaultBranchRef {
               target {
                 ... on Commit {
-                  history(first: 100) { 
+                  history(first: 100) {
                     pageInfo {
                       hasNextPage
                       endCursor
@@ -109,7 +109,7 @@ models:
     from: openai/gpt-4o
     params:
       spice_tools: auto
-      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }      
+      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
   - name: openai
     from: openai/gpt-4o

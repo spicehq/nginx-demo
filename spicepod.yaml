@@ -151,7 +151,7 @@ models:
       openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_1 }
 
   - name: groq_with_spice
-    from: openai/llama-3.1-8b-instant
+    from: openai/llama3-groq-8b-8192-tool-use-preview
     params:
       spice_tools: auto
       endpoint: https://api.groq.com/openai/v1

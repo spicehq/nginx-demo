@@ -141,7 +141,7 @@ models:
   - name: openai-with-spice-sql
     from: openai/gpt-4o
     params:
-      spice_tools: sql, list_tables, table_schema
+      spice_tools: sql, list_datasets, table_schema
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
   - name: groq

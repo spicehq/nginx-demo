@@ -43,8 +43,8 @@ datasets:
         column_pk:
           - id
 
-  - from: ftp://ftp.spiceai.us/nginx/docs/
-    name: nginx.docs
+  - name: nginx.docs
+    from: "sharepoint:drive:Documents/path:/md"
     description: Documentation of the Nginx project. https://nginx.org/en/docs/.
     embeddings:
       - column: content
@@ -54,9 +54,10 @@ datasets:
     acceleration:
       enabled: true
     params:
-      file_format: md
-      ftp_user: spiceai
-      ftp_pass: ${secrets:SPICE_FTP_PASS}
+      # file_format: md
+      sharepoint_client_id: f2b3116e-b4c4-464f-80ec-73cd9d9886b4
+      sharepoint_tenant_id: 92543123-2b6a-4eec-9b6f-595720cd1c8f
+      sharepoint_client_secret: ${secrets:SPICE_SHAREPOINT_CLIENT_SECRET}
 
   - from: graphql:https://api.github.com/graphql
     name: nginx.commits

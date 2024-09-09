@@ -50,7 +50,7 @@ datasets:
       - column: content
         use: hf_minilm
         column_pk:
-          - location
+          - name
     acceleration:
       enabled: true
     params:

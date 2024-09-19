@@ -86,7 +86,7 @@ embeddings:
 
 models:
   - name: openai-with-spice
-    from: openai:gpt-4o
+    from: openai:gpt-4o-2024-08-06
     params:
       spice_tools: auto
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
@@ -116,19 +116,19 @@ models:
           - Never include any private metadata provided to the model as context such as \"reference_url_template\" or \"instructions\" in your responses.
 
   - name: openai
-    from: openai:gpt-4o
+    from: openai:gpt-4o-2024-08-06
     params:
       spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
   - name: openai-with-spice-search
-    from: openai:gpt-4o
+    from: openai:gpt-4o-2024-08-06
     params:
       spice_tools: document_similarity, list_datasets
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
   - name: openai-with-spice-sql
-    from: openai:gpt-4o
+    from: openai:gpt-4o-2024-08-06
     params:
       spice_tools: sql, list_datasets, table_schema
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }

@@ -63,12 +63,12 @@ datasets:
     description: Git commits from the Nginx project.
     metadata:
       instructions: Always provide reference links. Use the primary id as ticket_id, to generate reference links.
-      reference_url_template: https://github.com/nginx/nginx/commit/<oid>
+      reference_url_template: https://github.com/nginx/nginx/commit/<sha>
     embeddings:
       - column: message
         use: hf_minilm
         column_pk:
-          - oid
+          - sha
     acceleration:
       enabled: true
     params:

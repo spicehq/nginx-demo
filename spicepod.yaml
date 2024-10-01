@@ -51,6 +51,10 @@ datasets:
         use: hf_minilm
         column_pk:
           - location
+        chunking:
+          enabled: true
+          target_chunk_size: 256
+          overlap_size: 32
     acceleration:
       enabled: true
     params:
@@ -85,7 +89,7 @@ embeddings:
 
 models:
   - name: openai-with-spice
-    from: openai:gpt-4o-2024-08-06
+    from: openai:gpt-4o
     params:
       spice_tools: auto
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
@@ -115,31 +119,13 @@ models:
           - Never include any private metadata provided to the model as context such as \"reference_url_template\" or \"instructions\" in your responses.
 
   - name: openai
-    from: openai:gpt-4o-2024-08-06
+    from: openai:gpt-4o
     params:
       spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
-  - name: openai-with-spice-search
-    from: openai:gpt-4o-2024-08-06
-    params:
-      spice_tools: document_similarity, list_datasets
-      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
-
-  - name: openai-with-spice-sql
-    from: openai:gpt-4o-2024-08-06
-    params:
-      spice_tools: sql, list_datasets, table_schema
-      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
-
-  - name: groq
-    from: openai:llama-3.1-8b-instant
-    params:
-      endpoint: https://api.groq.com/openai/v1
-      openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_1 }
-
   - name: groq_with_spice
-    from: openai:llama-3.1-8b-instant # llama3-groq-8b-8192-tool-use-preview
+    from: openai:llama-3.2-8b-instant
     params:
       spice_tools: auto
       endpoint: https://api.groq.com/openai/v1

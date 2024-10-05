@@ -78,6 +78,22 @@ datasets:
     params:
       github_token: ${secrets:GITHUB_TOKEN}
 
+  - from: github:github.com/nginx/nginx/issues
+    name: nginx.issues
+    description: Issues from the nginx project.
+    metadata:
+      instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
+      reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
+    embeddings:
+      - column: description
+        use: hf_minilm
+        column_pk:
+          - id
+    acceleration:
+      enabled: true
+    params:
+      github_token: ${secrets:GITHUB_TOKEN}
+
 embeddings:
   - name: oai
     from: openai

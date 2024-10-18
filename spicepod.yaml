@@ -1,6 +1,6 @@
 version: v1beta1
 kind: Spicepod
-name: f5-nginx
+name: nginx-demo
 
 runtime:
   tracing:

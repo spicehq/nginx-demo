@@ -37,6 +37,7 @@ datasets:
     params:
       file_format: csv
       csv_schema_infer_max_records: 1
+      hive_infer_partitions: false
     embeddings:
       - column: description
         use: oai

@@ -5,7 +5,7 @@ name: nginx-demo
 runtime:
   tracing:
     zipkin_enabled: true
-    zipkin_endpoint: http://zipkin.zipkin:9411/api/v2/spans
+    zipkin_endpoint: http://10.123.181.42:9411/api/v2/spans
 
 datasets:
   - from: databricks:f5_demo.default.cve_nginx

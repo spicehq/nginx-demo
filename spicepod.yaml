@@ -127,9 +127,9 @@ models:
       spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
-  - name: groq_with_spice
-    from: openai:llama-3.2-90b-text-preview
-    params:
-      spice_tools: auto
-      endpoint: https://api.groq.com/openai/v1
-      openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_2 }
+  # - name: groq_with_spice
+  #   from: openai:llama-3.2-90b-text-preview
+  #   params:
+  #     spice_tools: auto
+  #     endpoint: https://api.groq.com/openai/v1
+  #     openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_2 }

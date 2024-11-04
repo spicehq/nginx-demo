@@ -1,4 +1,4 @@
-# f5-demo
+# nginx-demo
 
 ## Local Setup
 

@@ -1,11 +1,11 @@
 version: v1beta1
 kind: Spicepod
-name: f5-nginx
+name: nginx-demo
 
 runtime:
   tracing:
     zipkin_enabled: true
-    zipkin_endpoint: http://zipkin.zipkin:9411/api/v2/spans
+    zipkin_endpoint: http://10.123.181.42:9411/api/v2/spans
 
 datasets:
   - from: databricks:f5_demo.default.cve_nginx
@@ -37,6 +37,7 @@ datasets:
     params:
       file_format: csv
       csv_schema_infer_max_records: 1
+      hive_infer_partitions: false
     embeddings:
       - column: description
         use: oai
@@ -76,7 +77,9 @@ datasets:
     acceleration:
       enabled: true
     params:
-      github_token: ${secrets:GITHUB_TOKEN}
+      github_client_id: ${secrets:GITHUB_CLIENT_ID}
+      github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
+      github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
 
   - from: github:github.com/nginx/nginx/issues
     name: nginx.issues
@@ -140,9 +143,9 @@ models:
       spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
-  - name: groq_with_spice
-    from: openai:llama-3.2-8b-instant
-    params:
-      spice_tools: auto
-      endpoint: https://api.groq.com/openai/v1
-      openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_2 }
+  # - name: groq_with_spice
+  #   from: openai:llama-3.2-90b-text-preview
+  #   params:
+  #     spice_tools: auto
+  #     endpoint: https://api.groq.com/openai/v1
+  #     openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_2 }

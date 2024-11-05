@@ -20,7 +20,7 @@ datasets:
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>
     embeddings:
       - column: cve_data
-        use: oai
+        use: openai_embeddings
         column_pk:
           - cveId
     acceleration:
@@ -40,7 +40,7 @@ datasets:
       hive_infer_partitions: false
     embeddings:
       - column: description
-        use: oai
+        use: openai_embeddings
         column_pk:
           - id
 
@@ -63,26 +63,56 @@ datasets:
       ftp_user: spiceai
       ftp_pass: ${secrets:SPICE_FTP_PASS}
 
-  - from: github:github.com/nginx/nginx/commits
-    name: nginx.commits
-    description: Git commits from the Nginx project.
+  - from: spice.ai/spice/nginx/issues
+    name: nginx.issues
+    description: Nginx GitHub issues from github.com/nginx/nginx.
+    params:
+      spiceai_api_key: ${ secrets:SPICEAI_API_KEY }
     metadata:
-      instructions: Always provide reference links. Use the primary id as ticket_id, to generate reference links.
-      reference_url_template: https://github.com/nginx/nginx/commit/<sha>
+      spiceai_app_id: 1635 # shared spicepod from spice.ai
+      instructions: Always provide citations.
+      keywords: Nginx, issues, GitHub
+      reference_base_url: https://github.com/nginx/nginx/issues/<issue_number>
+    embeddings:
+      - column: title
+        column_pk:
+          - number
+        use: openai_embeddings
+      
+  - from: spice.ai/spice/nginx/pulls
+    name: nginx.pulls
+    description: Nginx GitHub pull requests from github.com/nginx/nginx.
+    params:
+      spiceai_api_key: ${ secrets:SPICEAI_API_KEY }
+    metadata:
+      spiceai_app_id: 1635 # shared spicepod from spice.ai
+      instructions: Always provide citations.
+      keywords: Nginx, pull requests, GitHub
+      reference_base_url: https://github.com/nginx/nginx/pull/<pull_number>
+    embeddings:
+      - column: title
+        column_pk:
+          - number
+        use: openai_embeddings
+      
+  - from: spice.ai/spice/nginx/commits
+    name: nginx.commits
+    description: Nginx GitHub commits from github.com/nginx/nginx.
+    params:
+      spiceai_api_key: ${ secrets:SPICEAI_API_KEY }
+    metadata:
+      spiceai_app_id: 1635 # shared spicepod from spice.ai
+      instructions: Always provide citations.
+      keywords: Nginx, commits, GitHub
+      reference_base_url: https://github.com/nginx/nginx/commit/<commit_sha>
     embeddings:
       - column: message
-        use: hf_minilm
         column_pk:
-          - sha
-    acceleration:
-      enabled: true
-    params:
-      github_client_id: ${secrets:GITHUB_CLIENT_ID}
-      github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
-      github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
+          - id
+        use: openai_embeddings
 
 embeddings:
-  - name: oai
+  - name: openai_embeddings
     from: openai
     params:
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }

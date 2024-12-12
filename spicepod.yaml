@@ -36,8 +36,7 @@ datasets:
       enabled: true
     params:
       file_format: csv
-      csv_schema_infer_max_records: 1
-      hive_infer_partitions: false
+      schema_infer_max_records: 1
     embeddings:
       - column: description
         use: openai_embeddings
@@ -63,7 +62,7 @@ datasets:
       ftp_user: spiceai
       ftp_pass: ${secrets:SPICE_FTP_PASS}
 
-  - from: spice.ai/spice/nginx/issues
+  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.issues
     name: nginx.issues
     description: Nginx GitHub issues from github.com/nginx/nginx.
     params:
@@ -79,7 +78,7 @@ datasets:
           - number
         use: openai_embeddings
       
-  - from: spice.ai/spice/nginx/pulls
+  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.pulls
     name: nginx.pulls
     description: Nginx GitHub pull requests from github.com/nginx/nginx.
     params:
@@ -95,7 +94,7 @@ datasets:
           - number
         use: openai_embeddings
       
-  - from: spice.ai/spice/nginx/commits
+  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.commits
     name: nginx.commits
     description: Nginx GitHub commits from github.com/nginx/nginx.
     params:

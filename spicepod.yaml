@@ -63,7 +63,7 @@ datasets:
       ftp_user: spiceai
       ftp_pass: ${secrets:SPICE_FTP_PASS}
 
-  - from: spice.ai/spiceai/nginx/spice.nginx.issues
+  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.issues
     name: nginx.issues
     description: Nginx GitHub issues from github.com/nginx/nginx.
     params:
@@ -79,7 +79,7 @@ datasets:
           - number
         use: openai_embeddings
       
-  - from: spice.ai/spiceai/nginx/spice.nginx.pulls
+  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.pulls
     name: nginx.pulls
     description: Nginx GitHub pull requests from github.com/nginx/nginx.
     params:
@@ -95,7 +95,7 @@ datasets:
           - number
         use: openai_embeddings
       
-  - from: spice.ai/spiceai/nginx/spice.nginx.commits
+  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.commits
     name: nginx.commits
     description: Nginx GitHub commits from github.com/nginx/nginx.
     params:

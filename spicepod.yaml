@@ -36,8 +36,7 @@ datasets:
       enabled: true
     params:
       file_format: csv
-      csv_schema_infer_max_records: 1
-      hive_infer_partitions: false
+      schema_infer_max_records: 1
     embeddings:
       - column: description
         use: openai_embeddings

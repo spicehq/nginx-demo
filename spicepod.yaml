@@ -78,7 +78,7 @@ datasets:
         column_pk:
           - number
         use: openai_embeddings
-      
+
   - from: spice.ai/spice/nginx/pulls
     name: nginx.pulls
     description: Nginx GitHub pull requests from github.com/nginx/nginx.
@@ -94,7 +94,7 @@ datasets:
         column_pk:
           - number
         use: openai_embeddings
-      
+
   - from: spice.ai/spice/nginx/commits
     name: nginx.commits
     description: Nginx GitHub commits from github.com/nginx/nginx.
@@ -111,7 +111,7 @@ datasets:
           - id
         use: openai_embeddings
 
-  - from: github:github.com/nginx/nginx/issues
+  - from: spice.ai/spice/nginx/issues
     name: nginx.issues
     description: Issues from the nginx project.
     metadata:
@@ -138,7 +138,7 @@ embeddings:
 
 models:
   - name: openai-with-spice
-    from: openai:gpt-4o
+    from: openai:gpt-4.1
     params:
       spice_tools: auto
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
@@ -168,14 +168,7 @@ models:
           - Never include any private metadata provided to the model as context such as \"reference_url_template\" or \"instructions\" in your responses.
 
   - name: openai
-    from: openai:gpt-4o
+    from: openai:gpt-4.1
     params:
       spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
-
-  # - name: groq_with_spice
-  #   from: openai:llama-3.2-90b-text-preview
-  #   params:
-  #     spice_tools: auto
-  #     endpoint: https://api.groq.com/openai/v1
-  #     openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_2 }

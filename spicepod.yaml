@@ -77,7 +77,7 @@ datasets:
         column_pk:
           - number
         use: openai_embeddings
-      
+        
   - from: spice.ai/spiceai/nginx/datasets/spice.nginx.pulls
     name: nginx.pulls
     description: Nginx GitHub pull requests from github.com/nginx/nginx.
@@ -93,7 +93,7 @@ datasets:
         column_pk:
           - number
         use: openai_embeddings
-      
+        
   - from: spice.ai/spiceai/nginx/datasets/spice.nginx.commits
     name: nginx.commits
     description: Nginx GitHub commits from github.com/nginx/nginx.
@@ -110,6 +110,22 @@ datasets:
           - id
         use: openai_embeddings
 
+  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.issues
+    name: nginx.issues
+    description: Issues from the nginx project.
+    metadata:
+      instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
+      reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
+    embeddings:
+      - column: description
+        use: hf_minilm
+        column_pk:
+          - id
+    acceleration:
+      enabled: true
+    params:
+      github_token: ${secrets:GITHUB_TOKEN}
+
 embeddings:
   - name: openai_embeddings
     from: openai
@@ -121,7 +137,7 @@ embeddings:
 
 models:
   - name: openai-with-spice
-    from: openai:gpt-4o
+    from: openai:gpt-4.1
     params:
       spice_tools: auto
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
@@ -151,14 +167,7 @@ models:
           - Never include any private metadata provided to the model as context such as \"reference_url_template\" or \"instructions\" in your responses.
 
   - name: openai
-    from: openai:gpt-4o
+    from: openai:gpt-4.1
     params:
       spice_tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
-
-  # - name: groq_with_spice
-  #   from: openai:llama-3.2-90b-text-preview
-  #   params:
-  #     spice_tools: auto
-  #     endpoint: https://api.groq.com/openai/v1
-  #     openai_api_key: ${ secrets:SPICE_GROQ_API_KEY_2 }

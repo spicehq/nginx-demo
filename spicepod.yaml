@@ -70,9 +70,9 @@ datasets:
       spiceai_api_key: ${ secrets:SPICEAI_API_KEY }
     metadata:
       spiceai_app_id: 1635 # shared spicepod from spice.ai
-      instructions: Always provide citations.
+      instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
       keywords: Nginx, issues, GitHub
-      reference_base_url: https://github.com/nginx/nginx/issues/<issue_number>
+      reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
     embeddings:
       - column: title
         column_pk:
@@ -88,7 +88,7 @@ datasets:
       spiceai_app_id: 1635 # shared spicepod from spice.ai
       instructions: Always provide citations.
       keywords: Nginx, pull requests, GitHub
-      reference_base_url: https://github.com/nginx/nginx/pull/<pull_number>
+      reference_url_template: https://github.com/nginx/nginx/pull/<pull_number>
     embeddings:
       - column: title
         column_pk:
@@ -104,28 +104,12 @@ datasets:
       spiceai_app_id: 1635 # shared spicepod from spice.ai
       instructions: Always provide citations.
       keywords: Nginx, commits, GitHub
-      reference_base_url: https://github.com/nginx/nginx/commit/<commit_sha>
+      reference_url_template: https://github.com/nginx/nginx/commit/<commit_sha>
     embeddings:
       - column: message
         column_pk:
           - id
         use: openai_embeddings
-
-  - from: spice.ai/spice/nginx/issues
-    name: nginx.issues
-    description: Issues from the nginx project.
-    metadata:
-      instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
-      reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
-    embeddings:
-      - column: description
-        use: hf_minilm
-        column_pk:
-          - id
-    acceleration:
-      enabled: true
-    params:
-      github_token: ${secrets:GITHUB_TOKEN}
 
 embeddings:
   - name: openai_embeddings

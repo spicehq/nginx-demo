@@ -48,7 +48,7 @@ datasets:
     description: Documentation of the Nginx project. https://nginx.org/en/docs/.
     embeddings:
       - column: content
-        use: hf_minilm
+        use: openai_embeddings # hf_minilm
         column_pk:
           - location
         chunking:
@@ -116,8 +116,8 @@ embeddings:
     params:
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
 
-  - name: hf_minilm
-    from: huggingface:huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+  # - name: hf_minilm
+  #   from: huggingface:huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 
 models:
   - name: openai-with-spice

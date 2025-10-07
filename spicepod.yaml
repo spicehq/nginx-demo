@@ -18,11 +18,16 @@ datasets:
     metadata:
       instructions: Always provide reference links. Use the primary id as cveId, to generate reference links.
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>
-    embeddings:
-      - column: cve_data
-        use: openai_embeddings
-        column_pk:
-          - cveId
+    columns:
+      - name: cve_data
+        embeddings:
+          - from: openai_embeddings
+            row_id:
+              - cveId
+        full_text_search:
+          enabled: true
+          row_id:
+            - cveId
     acceleration:
       enabled: true
 
@@ -37,24 +42,34 @@ datasets:
     params:
       file_format: csv
       schema_infer_max_records: 1
-    embeddings:
-      - column: description
-        use: openai_embeddings
-        column_pk:
-          - id
+    columns:
+      - name: description
+        embeddings:
+          - from: openai_embeddings
+            row_id:
+              - id
+        full_text_search:
+          enabled: true
+          row_id:
+            - id
 
   - from: ftp://ftp.spiceai.us/nginx/docs/
     name: nginx.docs
     description: Documentation of the Nginx project. https://nginx.org/en/docs/.
-    embeddings:
-      - column: content
-        use: openai_embeddings # hf_minilm
-        column_pk:
-          - location
-        chunking:
+    columns:
+      - name: content
+        embeddings:
+          - from: openai_embeddings
+            row_id:
+              - location
+            chunking:
+              enabled: true
+              target_chunk_size: 256
+              overlap_size: 32
+        full_text_search:
           enabled: true
-          target_chunk_size: 256
-          overlap_size: 32
+          row_id:
+            - location
     acceleration:
       enabled: true
     params:
@@ -72,11 +87,16 @@ datasets:
       instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
       keywords: Nginx, issues, GitHub
       reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
-    embeddings:
-      - column: title
-        column_pk:
-          - number
-        use: openai_embeddings
+    columns:
+      - name: title
+        embeddings:
+          - from: openai_embeddings
+            row_id:
+              - number
+        full_text_search:
+          enabled: true
+          row_id:
+            - number
 
   - from: spice.ai/spiceai/nginx/datasets/spice.nginx.pulls
     name: nginx.pulls
@@ -88,11 +108,16 @@ datasets:
       instructions: Always provide citations.
       keywords: Nginx, pull requests, GitHub
       reference_url_template: https://github.com/nginx/nginx/pull/<pull_number>
-    embeddings:
-      - column: title
-        column_pk:
-          - number
-        use: openai_embeddings
+    columns:
+      - name: title
+        embeddings:
+          - from: openai_embeddings
+            row_id:
+              - number
+        full_text_search:
+          enabled: true
+          row_id:
+            - number
 
   - from: spice.ai/spiceai/nginx/datasets/spice.nginx.commits
     name: nginx.commits
@@ -104,11 +129,16 @@ datasets:
       instructions: Always provide citations.
       keywords: Nginx, commits, GitHub
       reference_url_template: https://github.com/nginx/nginx/commit/<commit_sha>
-    embeddings:
-      - column: message
-        column_pk:
-          - id
-        use: openai_embeddings
+    columns:
+      - name: message
+        embeddings:
+          - from: openai_embeddings
+            row_id:
+              - id
+        full_text_search:
+          enabled: true
+          row_id:
+            - id
 
 embeddings:
   - name: openai_embeddings

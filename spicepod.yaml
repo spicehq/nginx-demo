@@ -123,7 +123,7 @@ models:
   - name: openai-with-spice
     from: openai:gpt-4.1
     params:
-      spice_tools: auto
+      tools: auto
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
       system_prompt: |
         You are an AI assistant assisting engineers with the Nginx project.
@@ -153,5 +153,5 @@ models:
   - name: openai
     from: openai:gpt-4.1
     params:
-      spice_tools: disabled
+      tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }

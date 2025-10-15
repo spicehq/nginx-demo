@@ -107,6 +107,10 @@ datasets:
       github_client_id: ${secrets:GITHUB_CLIENT_ID}
       github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
       github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
+    metadata:
+      instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
+      keywords: Nginx, issues, GitHub
+      reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
     acceleration:
       enabled: true
       refresh_mode: full
@@ -124,6 +128,10 @@ datasets:
           - from: openai_embeddings
             row_id:
               - number
+        full_text_search:
+          enabled: true
+          row_id:
+            - number
 
   - from: github:github.com/nginx/nginx/pulls
     name: nginx.pulls
@@ -133,6 +141,10 @@ datasets:
       github_client_id: ${secrets:GITHUB_CLIENT_ID}
       github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
       github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
+    metadata:
+      instructions: Always provide citations.
+      keywords: Nginx, pull requests, GitHub
+      reference_url_template: https://github.com/nginx/nginx/pull/<pull_number>
     acceleration:
       enabled: true
       refresh_mode: full
@@ -150,6 +162,10 @@ datasets:
           - from: openai_embeddings
             row_id:
               - number
+        full_text_search:
+          enabled: true
+          row_id:
+            - number
 
   - from: github:github.com/nginx/nginx/commits
     name: nginx.commits
@@ -159,6 +175,10 @@ datasets:
       github_client_id: ${secrets:GITHUB_CLIENT_ID}
       github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
       github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
+    metadata:
+      instructions: Always provide citations.
+      keywords: Nginx, commits, GitHub
+      reference_url_template: https://github.com/nginx/nginx/commit/<commit_sha>
     acceleration:
       enabled: true
       refresh_mode: append
@@ -176,6 +196,10 @@ datasets:
           - from: openai_embeddings
             row_id:
               - id
+        full_text_search:
+          enabled: true
+          row_id:
+            - id
 
 embeddings:
   - name: openai_embeddings

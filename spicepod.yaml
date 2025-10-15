@@ -37,9 +37,10 @@ datasets:
       enabled: true
       engine: duckdb
       mode: file
-      snapshots: enabled
-      params:
-        duckdb_file: cve.db
+      partition_by: bucket(5, cveId)
+      # snapshots: enabled
+      # params:
+      #   duckdb_file: cve.db
 
   - from: s3://spiceai-demo-datasets/nginx/tickets/
     name: nginx.tickets

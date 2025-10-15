@@ -2,11 +2,6 @@ version: v1beta1
 kind: Spicepod
 name: nginx-demo
 
-runtime:
-  tracing:
-    zipkin_enabled: true
-    zipkin_endpoint: http://10.123.181.42:9411/api/v2/spans
-
 snapshots:
   enabled: true
   location: s3://spiceai-demo-snapshots/nginx-demo/
@@ -86,7 +81,6 @@ datasets:
           enabled: true
           target_chunk_size: 256
           overlap_size: 32
-
     acceleration:
       enabled: true
       engine: duckdb

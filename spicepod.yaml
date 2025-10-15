@@ -37,7 +37,8 @@ datasets:
       enabled: true
       engine: duckdb
       mode: file
-      partition_by: bucket(5, cveId)
+      partition_by:
+        - bucket(5, cveId)
       # snapshots: enabled
       # params:
       #   duckdb_file: cve.db

@@ -53,9 +53,9 @@ datasets:
       enabled: true
       engine: duckdb
       mode: file
-      snapshots: enabled
+      snapshots: create_only # enabled
       params:
-        duckdb_file: nginx-tickets.db
+        duckdb_file: tickets.db
     params:
       file_format: csv
       schema_infer_max_records: 500

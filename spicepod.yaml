@@ -55,10 +55,10 @@ datasets:
       mode: file
       snapshots: enabled
       params:
-        duckdb_file: tickets.db
+        duckdb_file: nginx-tickets.db
     params:
       file_format: csv
-      schema_infer_max_records: 100
+      schema_infer_max_records: 500
       s3_auth: public
     columns:
       - name: description

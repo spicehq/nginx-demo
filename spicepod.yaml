@@ -58,7 +58,7 @@ datasets:
         duckdb_file: tickets.db
     params:
       file_format: csv
-      schema_infer_max_records: 1
+      schema_infer_max_records: 100
       s3_auth: public
     columns:
       - name: description

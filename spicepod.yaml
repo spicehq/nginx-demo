@@ -7,14 +7,24 @@ runtime:
     zipkin_enabled: true
     zipkin_endpoint: http://10.123.181.42:9411/api/v2/spans
 
+snapshots:
+  enabled: true
+  location: s3://spiceai-demo-snapshots/nginx-demo/
+  bootstrap_on_failure_behavior: fallback
+  params:
+    s3_auth: key
+    s3_key: ${secrets:SPICE_S3_NGINX_KEY}
+    s3_secret: ${secrets:SPICE_S3_NGINX_SECRET}
+    s3_region: us-east-1
+
 datasets:
-  - from: databricks:f5_demo.default.cve_nginx
+  - from: delta_lake:s3://databricks-workspace-stack-473ec-bucket/unity-catalog/8429759719709712/f5_demo/__unitystorage/catalogs/5b92ca23-f83d-455b-837d-e193a6073bdf/tables/ecc99631-883f-4b7e-baf9-99b00c7fde44
     name: nginx.cve
     description: Security advisories and Common Vulnerabilities and Exposures (CVEs) for the Nginx project. https://nginx.org/en/security_advisories.html.
     params:
-      databricks_token: ${secrets:SPICE_DATABRICKS_TOKEN}
-      databricks_endpoint: ${secrets:SPICE_DATABRICKS_ENDPOINT}
-      databricks_cluster_id: ${secrets:SPICE_DATABRICKS_CLUSTER_ID}
+      delta_lake_aws_access_key_id: ${secrets:SPICE_S3_NGINX_KEY}
+      delta_lake_aws_secret_access_key: ${secrets:SPICE_S3_NGINX_SECRET}
+      delta_lake_aws_region: us-east-1
     metadata:
       instructions: Always provide reference links. Use the primary id as cveId, to generate reference links.
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>
@@ -30,6 +40,11 @@ datasets:
             - cveId
     acceleration:
       enabled: true
+      engine: duckdb
+      mode: file
+      snapshots: enabled
+      params:
+        duckdb_file: cve.db
 
   - from: s3://spiceai-demo-datasets/nginx/tickets/
     name: nginx.tickets
@@ -39,9 +54,15 @@ datasets:
       reference_url_template: https://trac.nginx.org/nginx/ticket/<ticket_id>
     acceleration:
       enabled: true
+      engine: duckdb
+      mode: file
+      snapshots: enabled
+      params:
+        duckdb_file: tickets.db
     params:
       file_format: csv
       schema_infer_max_records: 1
+      s3_auth: public
     columns:
       - name: description
         embeddings:
@@ -68,73 +89,93 @@ datasets:
 
     acceleration:
       enabled: true
+      engine: duckdb
+      mode: file
+      snapshots: enabled
+      params:
+        duckdb_file: docs.db
     params:
       file_format: md
       ftp_user: spiceai
       ftp_pass: ${secrets:SPICE_FTP_PASS}
 
-  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.issues
+  - from: github:github.com/nginx/nginx/issues
     name: nginx.issues
-    description: Nginx GitHub issues from github.com/nginx/nginx.
+    description: Nginx GitHub issues from https://github.com/nginx/nginx
+    time_column: created_at
     params:
-      spiceai_api_key: ${ secrets:SPICEAI_API_KEY }
-    metadata:
-      spiceai_app_id: 1635 # shared spicepod from spice.ai
-      instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
-      keywords: Nginx, issues, GitHub
-      reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
+      github_client_id: ${secrets:GITHUB_CLIENT_ID}
+      github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
+      github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
+    acceleration:
+      enabled: true
+      refresh_mode: full
+      refresh_check_interval: 4h
+      refresh_jitter_enabled: true
+      refresh_jitter_max: 15m
+      engine: duckdb
+      mode: file
+      snapshots: enabled
+      params:
+        duckdb_file: issues.db
     columns:
       - name: title
         embeddings:
           - from: openai_embeddings
             row_id:
               - number
-        full_text_search:
-          enabled: true
-          row_id:
-            - number
 
-  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.pulls
+  - from: github:github.com/nginx/nginx/pulls
     name: nginx.pulls
-    description: Nginx GitHub pull requests from github.com/nginx/nginx.
+    description: Nginx GitHub pull requests from https://github.com/nginx/nginx
+    time_column: created_at
     params:
-      spiceai_api_key: ${ secrets:SPICEAI_API_KEY }
-    metadata:
-      spiceai_app_id: 1635 # shared spicepod from spice.ai
-      instructions: Always provide citations.
-      keywords: Nginx, pull requests, GitHub
-      reference_url_template: https://github.com/nginx/nginx/pull/<pull_number>
+      github_client_id: ${secrets:GITHUB_CLIENT_ID}
+      github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
+      github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
+    acceleration:
+      enabled: true
+      refresh_mode: full
+      refresh_check_interval: 4h
+      refresh_jitter_enabled: true
+      refresh_jitter_max: 15m
+      engine: duckdb
+      mode: file
+      snapshots: enabled
+      params:
+        duckdb_file: pulls.db
     columns:
       - name: title
         embeddings:
           - from: openai_embeddings
             row_id:
               - number
-        full_text_search:
-          enabled: true
-          row_id:
-            - number
 
-  - from: spice.ai/spiceai/nginx/datasets/spice.nginx.commits
+  - from: github:github.com/nginx/nginx/commits
     name: nginx.commits
-    description: Nginx GitHub commits from github.com/nginx/nginx.
+    description: Nginx GitHub commits from https://github.com/nginx/nginx
+    time_column: committed_date
     params:
-      spiceai_api_key: ${ secrets:SPICEAI_API_KEY }
-    metadata:
-      spiceai_app_id: 1635 # shared spicepod from spice.ai
-      instructions: Always provide citations.
-      keywords: Nginx, commits, GitHub
-      reference_url_template: https://github.com/nginx/nginx/commit/<commit_sha>
+      github_client_id: ${secrets:GITHUB_CLIENT_ID}
+      github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
+      github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
+    acceleration:
+      enabled: true
+      refresh_mode: append
+      refresh_check_interval: 4h
+      refresh_jitter_enabled: true
+      refresh_jitter_max: 15m
+      engine: duckdb
+      mode: file
+      snapshots: enabled
+      params:
+        duckdb_file: commits.db
     columns:
       - name: message
         embeddings:
           - from: openai_embeddings
             row_id:
               - id
-        full_text_search:
-          enabled: true
-          row_id:
-            - id
 
 embeddings:
   - name: openai_embeddings

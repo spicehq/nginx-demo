@@ -2,6 +2,14 @@ version: v2
 kind: Spicepod
 name: nginx-demo
 
+runtime:
+  caching:
+    sql_results:
+      enabled: true
+      max_size: 1GiB # Default 128 MiB
+      item_ttl: 10m # Default 1s
+      stale_while_revalidate_ttl: 30s # Default 0s (disabled)
+
 snapshots:
   enabled: true
   location: s3://spiceai-demo-snapshots/nginx-demo/

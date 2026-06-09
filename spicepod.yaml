@@ -12,7 +12,7 @@ runtime:
 
 snapshots:
   enabled: true
-  location: s3://spiceai-demo-snapshots/nginx-demo/
+  location: s3://spiceai-demo-snapshots/nginx-demo-v2/
   bootstrap_on_failure_behavior: fallback
   params:
     s3_auth: key

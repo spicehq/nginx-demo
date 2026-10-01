@@ -43,11 +43,9 @@ datasets:
             - cveId
     acceleration:
       enabled: true
-      engine: duckdb
+      engine: cayenne
       mode: file
       # snapshots: enabled
-      # params:
-      #   duckdb_file: cve.db
 
   - from: s3://spiceai-demo-datasets/nginx/tickets/
     name: nginx.tickets
@@ -57,11 +55,9 @@ datasets:
       reference_url_template: https://trac.nginx.org/nginx/ticket/<ticket_id>
     acceleration:
       enabled: true
-      engine: duckdb
+      engine: cayenne
       mode: file
       snapshots: create_only # enabled
-      params:
-        duckdb_file: tickets.db
     params:
       file_format: csv
       schema_infer_max_records: "500"
@@ -91,11 +87,9 @@ datasets:
           overlap_size: 32
     acceleration:
       enabled: true
-      engine: duckdb
+      engine: cayenne
       mode: file
       snapshots: enabled
-      params:
-        duckdb_file: docs.db
     params:
       file_format: md
       ftp_user: spiceai
@@ -119,11 +113,9 @@ datasets:
       refresh_check_interval: 4h
       refresh_jitter_enabled: true
       refresh_jitter_max: 15m
-      engine: duckdb
+      engine: cayenne
       mode: file
       snapshots: enabled
-      params:
-        duckdb_file: issues.db
     columns:
       - name: title
         embeddings:
@@ -153,11 +145,9 @@ datasets:
       refresh_check_interval: 4h
       refresh_jitter_enabled: true
       refresh_jitter_max: 15m
-      engine: duckdb
+      engine: cayenne
       mode: file
       snapshots: enabled
-      params:
-        duckdb_file: pulls.db
     columns:
       - name: title
         embeddings:
@@ -187,11 +177,9 @@ datasets:
       refresh_check_interval: 4h
       refresh_jitter_enabled: true
       refresh_jitter_max: 15m
-      engine: duckdb
+      engine: cayenne
       mode: file
       snapshots: enabled
-      params:
-        duckdb_file: commits.db
     columns:
       - name: message
         embeddings:

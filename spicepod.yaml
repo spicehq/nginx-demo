@@ -45,8 +45,6 @@ datasets:
       enabled: true
       engine: duckdb
       mode: file
-      partition_by:
-        - 'bucket(5, cveId)'
       # snapshots: enabled
       # params:
       #   duckdb_file: cve.db
@@ -216,7 +214,7 @@ embeddings:
 
 models:
   - name: openai-with-spice
-    from: openai:gpt-4.1
+    from: openai:gpt-6.1-sol
     params:
       tools: auto
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
@@ -246,7 +244,7 @@ models:
           - Never include any private metadata provided to the model as context such as \"reference_url_template\" or \"instructions\" in your responses.
 
   - name: openai
-    from: openai:gpt-4.1
+    from: openai:gpt-6.1-sol
     params:
       tools: disabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }

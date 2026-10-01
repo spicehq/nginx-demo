@@ -45,7 +45,7 @@ datasets:
       enabled: true
       engine: cayenne
       mode: file
-      # snapshots: enabled
+      snapshots: enabled
 
   - from: s3://spiceai-demo-datasets/nginx/tickets/
     name: nginx.tickets
@@ -57,7 +57,7 @@ datasets:
       enabled: true
       engine: cayenne
       mode: file
-      snapshots: create_only # enabled
+      snapshots: enabled
     params:
       file_format: csv
       schema_infer_max_records: "500"

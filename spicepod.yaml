@@ -5,7 +5,6 @@ name: nginx-demo
 runtime:
   caching:
     sql_results:
-      enabled: true
       max_size: 1GiB # Default 128 MiB
       item_ttl: 10m # Default 1s
       stale_while_revalidate_ttl: 30s # Default 0s (disabled)
@@ -23,66 +22,39 @@ datasets:
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>
     columns:
       - name: cve_data
-        embeddings:
-          - from: openai_embeddings
-            row_id:
-              - cveId
-        full_text_search:
-          enabled: true
-          row_id:
-            - cveId
-    acceleration:
-      enabled: true
-      engine: cayenne
-      mode: file
+        embeddings: [{ from: openai_embeddings, row_id: [cveId] }]
+        full_text_search: { enabled: true, row_id: [cveId] }
+    acceleration: &cayenne { engine: cayenne, mode: file }
 
   - from: s3://spiceai-demo-datasets/nginx/tickets/
     name: nginx.tickets
     description: Tracked issues for the Nginx project. Tickets from https://trac.nginx.org/nginx/report.
+    params: { file_format: csv, schema_infer_max_records: "500", s3_auth: public }
     metadata:
       instructions: Always provide reference links. Use the primary id as ticket_id, to generate reference links.
       reference_url_template: https://trac.nginx.org/nginx/ticket/<ticket_id>
-    acceleration:
-      enabled: true
-      engine: cayenne
-      mode: file
-    params:
-      file_format: csv
-      schema_infer_max_records: "500"
-      s3_auth: public
     columns:
       - name: description
-        embeddings:
-          - from: openai_embeddings
-            row_id:
-              - id
-        full_text_search:
-          enabled: true
-          row_id:
-            - id
+        embeddings: [{ from: openai_embeddings, row_id: [id] }]
+        full_text_search: { enabled: true, row_id: [id] }
+    acceleration: *cayenne
 
   - from: ftp://ftp.spiceai.us/nginx/docs/
     name: nginx.docs
     description: Documentation of the Nginx project. https://nginx.org/en/docs/.
-    embeddings:
-      - column: content
-        use: hf_minilm
-        column_pk:
-          - location
-        chunking:
-          enabled: true
-          target_chunk_size: 256
-          overlap_size: 32
-    acceleration:
-      enabled: true
-      engine: cayenne
-      mode: file
     params:
       file_format: md
       ftp_user: spiceai
       ftp_pass: ${secrets:SPICE_FTP_PASS}
+    embeddings:
+      - column: content
+        use: hf_minilm
+        column_pk: [location]
+        chunking: { enabled: true, target_chunk_size: 256, overlap_size: 32 }
+    acceleration: *cayenne
 
-  - from: github:github.com/nginx/nginx/issues
+  - &github
+    from: github:github.com/nginx/nginx/issues
     name: nginx.issues
     description: Nginx GitHub issues from https://github.com/nginx/nginx
     time_column: created_at
@@ -94,102 +66,56 @@ datasets:
       instructions: Always provide reference links. Use the primary key as `issue_id` to generate reference links.
       keywords: Nginx, issues, GitHub
       reference_url_template: https://github.com/nginx/nginx/issues/<issue_id>
-    acceleration:
-      enabled: true
+    acceleration: &github_acceleration
+      <<: *cayenne
       refresh_mode: full
       refresh_check_interval: 4h
       refresh_jitter_enabled: true
       refresh_jitter_max: 15m
-      engine: cayenne
-      mode: file
     columns:
       - name: title
-        embeddings:
-          - from: openai_embeddings
-            row_id:
-              - number
-        full_text_search:
-          enabled: true
-          row_id:
-            - number
+        embeddings: [{ from: openai_embeddings, row_id: [number] }]
+        full_text_search: { enabled: true, row_id: [number] }
 
-  - from: github:github.com/nginx/nginx/pulls
+  - <<: *github
+    from: github:github.com/nginx/nginx/pulls
     name: nginx.pulls
     description: Nginx GitHub pull requests from https://github.com/nginx/nginx
-    time_column: created_at
-    params:
-      github_client_id: ${secrets:GITHUB_CLIENT_ID}
-      github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
-      github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
     metadata:
       instructions: Always provide citations.
       keywords: Nginx, pull requests, GitHub
       reference_url_template: https://github.com/nginx/nginx/pull/<pull_number>
-    acceleration:
-      enabled: true
-      refresh_mode: full
-      refresh_check_interval: 4h
-      refresh_jitter_enabled: true
-      refresh_jitter_max: 15m
-      engine: cayenne
-      mode: file
-    columns:
-      - name: title
-        embeddings:
-          - from: openai_embeddings
-            row_id:
-              - number
-        full_text_search:
-          enabled: true
-          row_id:
-            - number
 
-  - from: github:github.com/nginx/nginx/commits
+  - <<: *github
+    from: github:github.com/nginx/nginx/commits
     name: nginx.commits
     description: Nginx GitHub commits from https://github.com/nginx/nginx
     time_column: committed_date
-    params:
-      github_client_id: ${secrets:GITHUB_CLIENT_ID}
-      github_private_key: ${secrets:GITHUB_PRIVATE_KEY}
-      github_installation_id: ${secrets:GITHUB_INSTALLATION_ID}
     metadata:
       instructions: Always provide citations.
       keywords: Nginx, commits, GitHub
       reference_url_template: https://github.com/nginx/nginx/commit/<commit_sha>
-    acceleration:
-      enabled: true
-      refresh_mode: append
-      refresh_check_interval: 4h
-      refresh_jitter_enabled: true
-      refresh_jitter_max: 15m
-      engine: cayenne
-      mode: file
+    acceleration: { <<: *github_acceleration, refresh_mode: append }
     columns:
       - name: message
-        embeddings:
-          - from: openai_embeddings
-            row_id:
-              - id
-        full_text_search:
-          enabled: true
-          row_id:
-            - id
+        embeddings: [{ from: openai_embeddings, row_id: [id] }]
+        full_text_search: { enabled: true, row_id: [id] }
 
 embeddings:
   - name: openai_embeddings
     from: openai
     params:
-      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
+      openai_api_key: &openai_api_key ${ secrets:SPICE_OPENAI_API_KEY }
 
   - name: hf_minilm
     from: huggingface:huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 
 models:
   - name: openai-with-spice
-    from: openai:gpt-6.1-sol
+    from: &model openai:gpt-6.1-sol
     params:
       tools: auto
-      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
+      openai_api_key: *openai_api_key
       system_prompt: |
         You are an AI assistant assisting engineers with the Nginx project.
 
@@ -216,7 +142,5 @@ models:
           - Never include any private metadata provided to the model as context such as \"reference_url_template\" or \"instructions\" in your responses.
 
   - name: openai
-    from: openai:gpt-6.1-sol
-    params:
-      tools: disabled
-      openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
+    from: *model
+    params: { tools: disabled, openai_api_key: *openai_api_key }

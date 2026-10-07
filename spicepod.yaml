@@ -189,6 +189,7 @@ models:
     from: openai:gpt-6.1-sol
     params:
       tools: auto
+      responses_api: enabled
       openai_api_key: ${ secrets:SPICE_OPENAI_API_KEY }
       system_prompt: |
         You are an AI assistant assisting engineers with the Nginx project.

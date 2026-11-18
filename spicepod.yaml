@@ -10,13 +10,13 @@ runtime:
       stale_while_revalidate_ttl: 30s # Default 0s (disabled)
 
 datasets:
-  - from: delta_lake:s3://databricks-workspace-stack-473ec-bucket/unity-catalog/8429759719709712/f5_demo/__unitystorage/catalogs/5b92ca23-f83d-455b-837d-e193a6073bdf/tables/ecc99631-883f-4b7e-baf9-99b00c7fde44
+  - from: delta_lake:s3://spiceai-demo-nginx/cve/
     name: nginx.cve
     description: Security advisories and Common Vulnerabilities and Exposures (CVEs) for the Nginx project. https://nginx.org/en/security_advisories.html.
     params:
       delta_lake_aws_access_key_id: ${secrets:SPICE_S3_NGINX_KEY}
       delta_lake_aws_secret_access_key: ${secrets:SPICE_S3_NGINX_SECRET}
-      delta_lake_aws_region: us-east-1
+      delta_lake_aws_region: us-west-2
     metadata:
       instructions: Always provide reference links. Use the primary id as cveId, to generate reference links.
       reference_url_template: https://www.cve.org/CVERecord?id=<cveId>
@@ -26,10 +26,10 @@ datasets:
         full_text_search: { enabled: true, row_id: [cveId] }
     acceleration: &cayenne { engine: cayenne, mode: file }
 
-  - from: s3://spiceai-demo-datasets/nginx/tickets/
+  - from: s3://spiceai-demo-nginx/tickets/
     name: nginx.tickets
     description: Tracked issues for the Nginx project. Tickets from https://trac.nginx.org/nginx/report.
-    params: { file_format: csv, schema_infer_max_records: "500", s3_auth: public }
+    params: { file_format: csv, schema_infer_max_records: "500", s3_auth: public, s3_region: us-west-2 }
     metadata:
       instructions: Always provide reference links. Use the primary id as ticket_id, to generate reference links.
       reference_url_template: https://trac.nginx.org/nginx/ticket/<ticket_id>
@@ -44,8 +44,8 @@ datasets:
     description: Documentation of the Nginx project. https://nginx.org/en/docs/.
     params:
       file_format: md
-      ftp_user: spiceai
-      ftp_pass: ${secrets:SPICE_FTP_PASS}
+      ftp_user: anonymous
+      ftp_pass: anonymous
     embeddings:
       - column: content
         use: hf_minilm

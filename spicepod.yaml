@@ -116,6 +116,7 @@ models:
     params:
       tools: auto
       openai_api_key: *openai_api_key
+      responses_api: enabled
       system_prompt: |
         You are an AI assistant assisting engineers with the Nginx project.
 
